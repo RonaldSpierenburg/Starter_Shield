@@ -45,7 +45,7 @@ TTSTime time;                               // instantiate an object of rtc
 
 int state = ST_TIME;                        // state
 
-int alarm_hour = 8;                         // hour of alarm
+int alarm_hour = 12;                         // hour of alarm
 int alarm_min  = 0;                         // minutes of alarm
 
 int now_hour;                               // hour of running
@@ -116,7 +116,14 @@ unsigned char isAlarm()
     {
         state = ST_ALARMING;
         cout << "goto alarm" << endl;
+        led4.off();
+        delay(20);
         buz.on();
+        delay(500);
+        buz.off();
+        delay(10000);
+        led4.on();
+        state = ST_TIME;
         return 1;
     }
     
@@ -133,7 +140,8 @@ void setup()
     
     Timer1.initialize(500000);                                  // timer1 500ms
     Timer1.attachInterrupt( timerIsr ); 
-
+    
+    led4.on();
 }
 
 void loop()
@@ -174,9 +182,6 @@ void loop()
         if(keyUp.pressed())                                     // press keyUp, display light sensor value
         {
 
-            led4.on();                                          // led4 on for 10ms
-            delay(10);
-            led4.off();
             while(keyUp.pressed())                              // display light value until release keyUp
             {
                 state = ST_LIGHT;
